@@ -3,8 +3,9 @@
  * Proprietary and confidential
  * Written by Thanabdee Bulunseechart <paheyisoicus@gmail.com>, August 2018
  */
-#include "car_connect/serial.hpp"
 #include <ros/ros.h>
+
+#include <car_connect/serial.hpp>
 using std::string;
 using namespace std;
 

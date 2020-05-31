@@ -1,6 +1,11 @@
 #pragma once
 
 
+#include <ros/ros.h>
+#include <Eigen/Dense>
+#include <eigen_conversions/eigen_msg.h>
+#include <tf_conversions/tf_eigen.h>
+#include <car_connect/msg.hpp>
 
 #define toUint32(X)    *(uint32_t*)(&X)
 #define toUint8(X)    *(uint8_t*)(&X)
@@ -174,7 +179,9 @@ sendMessage(const uint8_t msg, const uint16_t id, const uint8_t *payload, const 
 
 
 
-
+/* -------------------------------------------------------------------------- */
+/*                     Decode the serial comming from car                     */
+/* -------------------------------------------------------------------------- */
 
 inline void packet_decode(uint16_t quad_uid )
 {
@@ -200,6 +207,8 @@ inline void packet_decode(uint16_t quad_uid )
             _imu_pub.publish(msg);
         }
 
+
+
         {
 
             nav_msgs::Odometry msg;
@@ -212,6 +221,17 @@ inline void packet_decode(uint16_t quad_uid )
             msg.twist.twist.angular.x = 0;
             msg.twist.twist.angular.y = 0;
             msg.twist.twist.angular.z = _state.sensor.est_speed.wz/100.0;
+            msg.pose.pose.position.x = _state.sensor.est_pos.x/1000.0;
+            msg.pose.pose.position.y = _state.sensor.est_pos.y/1000.0;
+            msg.pose.pose.position.z = 0;
+
+            /* -------------------------------------------------------------------------- */
+            /*             convert yaw to quaternion eigen and forward to msg             */
+            /* -------------------------------------------------------------------------- */
+            float yaw = _state.sensor.est_pos.thz/100.0;
+            Eigen::Quaterniond yawq(cos(yaw / 2), 0, 0, sin(yaw / 2));
+            tf::quaternionEigenToMsg(yawq,msg.pose.pose.orientation );
+            
             _odom_pub.publish(msg);
         }
         
