@@ -14,6 +14,7 @@
 #define toSint(X)    *(int16_t*)(&X)
 #define toFlt(X)    *(float*)(&X)
 #define toLong(X)    *(int32_t*)(&X)
+#define wrap_pi(x) (x < -M_PI ? x+2*M_PI : (x > M_PI ? x - 2*M_PI: x))
 
 
 uint8_t st = 0, _msgid, _pay[2048], _c[2],_lenp[2], _uid[2];
@@ -201,9 +202,9 @@ inline void packet_decode(uint16_t quad_uid )
             msg.angular_velocity.x = _state.sensor.imu.imu_gyro[0]/100.0;
             msg.angular_velocity.y = _state.sensor.imu.imu_gyro[1]/100.0;
             msg.angular_velocity.z = _state.sensor.imu.imu_gyro[2]/100.0;
-            msg.linear_acceleration.x = _state.sensor.imu.imu_accel[0]/100.0;
-            msg.linear_acceleration.y = _state.sensor.imu.imu_accel[1]/100.0;
-            msg.linear_acceleration.z = _state.sensor.imu.imu_accel[2]/100.0;
+            msg.linear_acceleration.x = -_state.sensor.imu.imu_accel[0]/100.0;
+            msg.linear_acceleration.y = -_state.sensor.imu.imu_accel[1]/100.0;
+            msg.linear_acceleration.z = -_state.sensor.imu.imu_accel[2]/100.0;
             _imu_pub.publish(msg);
         }
 
@@ -228,7 +229,7 @@ inline void packet_decode(uint16_t quad_uid )
             /* -------------------------------------------------------------------------- */
             /*             convert yaw to quaternion eigen and forward to msg             */
             /* -------------------------------------------------------------------------- */
-            float yaw = _state.sensor.est_pos.thz/100.0;
+            float yaw = wrap_pi(_state.sensor.est_pos.thz/100.0+M_PI);
             Eigen::Quaterniond yawq(cos(yaw / 2), 0, 0, sin(yaw / 2));
             tf::quaternionEigenToMsg(yawq,msg.pose.pose.orientation );
             
