@@ -238,16 +238,25 @@ inline void packet_decode(uint16_t quad_uid )
             _odom_pub.publish(msg);
 
 
-            static tf::TransformBroadcaster odom_br;
-            tf::Transform transform;
-            tf::Quaternion q;
-            q.setRPY(0,0,yaw);
-            transform.setOrigin(tf::Vector3(msg.pose.pose.position.x,msg.pose.pose.position.y,msg.pose.pose.position.z));
-            transform.setRotation(q);
 
-            odom_br.sendTransform(
-                tf::StampedTransform(
-                    transform, ros::Time::now(), "odom", "base_link"));
+            /* -------------------------------------------------------------------------- */
+            /*                          Send odom at 20hz for now                         */
+            /* -------------------------------------------------------------------------- */
+            static ros::Time last_send_tf = ros::Time::now();
+            if(ros::Time::now()-last_send_tf > ros::Duration(0.05)) {
+                last_send_tf = ros::Time::now();
+                static tf::TransformBroadcaster odom_br;
+                tf::Transform transform;
+                tf::Quaternion q;
+                q.setRPY(0,0,yaw);
+                transform.setOrigin(tf::Vector3(msg.pose.pose.position.x,msg.pose.pose.position.y,msg.pose.pose.position.z));
+                transform.setRotation(q);
+
+                odom_br.sendTransform(
+                    tf::StampedTransform(
+                        transform, ros::Time::now(), "odom", "base_link"));
+            }
+            
       
 
         }
