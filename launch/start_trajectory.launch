@@ -14,7 +14,7 @@
 <launch>
 
   <arg name="initial_pose" default="
-    { to_trajectory_id=0, relative_pose={translation={$(arg x), $(arg y), 0},rotation={0.0,0.0,$(arg yaw)} }}"/>
+    { to_trajectory_id=0, relative_pose={translation={$(arg x), $(arg y), 0},rotation={0.0,0.0,$(arg yaw)} },timestamp = 0}"/>
 
    <node name="cartographer_start_trajectory" pkg="cartographer_ros"
       type="cartographer_start_trajectory" args="
