@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
   nav_msgs
   geometry_msgs
   eigen_conversions
+  tf
 )
 
 find_package(eigen3 QUIET)
