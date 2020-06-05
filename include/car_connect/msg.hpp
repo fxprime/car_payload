@@ -10,7 +10,7 @@
 #define SYSTEM_STATUS       51
 #define RC_STATUS           52
 #define VEL_CNT             53
-#define CMD_DO_2            101
+#define CMD_NAV_VEL        101
 
 #pragma pack(push, 1)
 

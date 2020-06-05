@@ -287,3 +287,7 @@ inline void packet_decode(uint16_t quad_uid )
         }
     }
 }
+
+static inline void send_vel_cmd_status(uint16_t quad_id, cnt_status_s &msg) {
+    sendMessage(CMD_NAV_VEL, quad_id, (uint8_t *)&msg, sizeof(msg)); 
+}
