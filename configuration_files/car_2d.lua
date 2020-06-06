@@ -22,8 +22,8 @@ options = {
   trajectory_builder = TRAJECTORY_BUILDER,
   map_frame = "map",
   tracking_frame = "imu",
-  published_frame = "odom",
-  odom_frame = "odom2", 
+  published_frame = "base_link",
+  odom_frame = "odom", 
   provide_odom_frame = true,
   publish_frame_projected_to_2d = false,
   use_odometry = true,
@@ -68,7 +68,7 @@ POSE_GRAPH.optimization_problem.local_slam_pose_translation_weight = 1e5
 POSE_GRAPH.optimization_problem.local_slam_pose_rotation_weight = 1e5
 POSE_GRAPH.optimization_problem.odometry_translation_weight = 1e5
 POSE_GRAPH.optimization_problem.odometry_rotation_weight = 1e5
-POSE_GRAPH.optimization_problem.huber_scale = 1e3
+POSE_GRAPH.optimization_problem.huber_scale = 1e2
 
 TRAJECTORY_BUILDER_2D.ceres_scan_matcher.occupied_space_weight = 10
 TRAJECTORY_BUILDER_2D.ceres_scan_matcher.rotation_weight = 40
@@ -77,5 +77,10 @@ TRAJECTORY_BUILDER_2D.submaps.num_range_data = 120
 TRAJECTORY_BUILDER_2D.motion_filter.max_distance_meters = 0.1
 TRAJECTORY_BUILDER_2D.motion_filter.max_angle_radians = math.rad(0.2)
 
+
+--NEED TEST 
+TRAJECTORY_BUILDER_2D.real_time_correlative_scan_matcher.linear_search_window = 0.1
+TRAJECTORY_BUILDER_2D.real_time_correlative_scan_matcher.translation_delta_cost_weight = 10.
+TRAJECTORY_BUILDER_2D.real_time_correlative_scan_matcher.rotation_delta_cost_weight = 1e-1
 
 return options

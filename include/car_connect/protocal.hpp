@@ -125,9 +125,7 @@ bool
 sendMessage(const uint8_t msg, const uint16_t id, const uint8_t *payload, const uint16_t length)
 { 
 
-    #ifndef USE_PROTOCAL
-        return true;
-    #endif
+
     ulink_header_t   header = {0};
     ulink_checksum_t checksum = {0};
 
@@ -242,9 +240,9 @@ inline void packet_decode(uint16_t quad_uid )
             /* -------------------------------------------------------------------------- */
             /*                          Send odom at 20hz for now                         */
             /* -------------------------------------------------------------------------- */
-            static ros::Time last_send_tf = ros::Time::now();
-            if(ros::Time::now()-last_send_tf > ros::Duration(0.05)) {
-                last_send_tf = ros::Time::now();
+            // static ros::Time last_send_tf = ros::Time::now();
+            // if(ros::Time::now()-last_send_tf > ros::Duration(0.05)) {
+            //     last_send_tf = ros::Time::now();
                 static tf::TransformBroadcaster odom_br;
                 tf::Transform transform;
                 tf::Quaternion q;
@@ -254,8 +252,8 @@ inline void packet_decode(uint16_t quad_uid )
 
                 odom_br.sendTransform(
                     tf::StampedTransform(
-                        transform, ros::Time::now(), "odom", "base_link"));
-            }
+                        transform, ros::Time::now(), "odom_wheel", "car"));
+            // }
             
       
 
@@ -285,6 +283,11 @@ inline void packet_decode(uint16_t quad_uid )
             msg.angular.z = _state.cnt.vel_cnt.wz/100.0;
             _vel_cmd_pub.publish(msg);
         }
+    }
+    else if (_msgid == TEXT_OUT) {
+        text_out_s msgOut;
+        memcpy(&msgOut, &_pay[0], sizeof(text_out_s));
+        ROS_INFO("CAR -> %s", msgOut.text);
     }
 }
 

@@ -5,6 +5,7 @@
 
 #define HEADER 0xf5
 
+#define TEXT_OUT            5
 #define ACK                 10
 #define SENSOR_STATUS       50
 #define SYSTEM_STATUS       51
@@ -65,6 +66,11 @@ struct pos_s {
 };
 
 
+
+/* TEXT_OUT */
+struct text_out_s {
+    char text[58];
+};
 /* SENSOR_STATUS */
 struct sensor_status_s {
     wheel_speed_s   wheel_speed;
