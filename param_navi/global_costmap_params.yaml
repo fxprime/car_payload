@@ -1,10 +1,18 @@
 global_costmap:
-  global_frame: /map
-  robot_base_frame: /base_link
+  update_frequency: 2.0 # Map update loop
+  plugins:
+      - name: static_map
+        type: "costmap_2d::StaticLayer"
+      -
+        name: obstacle_layer
+        type: "costmap_2d::VoxelLayer"
 
-  update_frequency: 10.0
-  publish_frequency: 10.0
-  transform_tolerance: 0.5
+      -
+        name: inflation_layer
+        type: "costmap_2d::InflationLayer"
 
-  static_map: true
- 
+
+
+  static_map:
+      lethal_cost_threshold: 50
+      static_map: true

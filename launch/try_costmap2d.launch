@@ -9,13 +9,29 @@
 
     <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
       <!-- Default configs form the TB3 repos -->
-      <!-- <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" /> -->
+      
+      
+      <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" />
+      <!-- <param name="base_local_planner" value="base_local_planner/TrajectoryPlannerROS" /> -->
+      <!-- <param name="base_global_planner" value="navfn/NavfnROS" /> -->
+      <!-- <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" /> -->
+
+
       <rosparam file="$(find car_connect)/param_navi/costmap_common_params_$(arg model).yaml"     command="load" ns="global_costmap" />
       <rosparam file="$(find car_connect)/param_navi/costmap_common_params_$(arg model).yaml"     command="load" ns="local_costmap" />
+
+
       <rosparam file="$(find car_connect)/param_navi/local_costmap_params.yaml"                   command="load" />
       <rosparam file="$(find car_connect)/param_navi/global_costmap_params.yaml"                  command="load" />
+
+
+
       <rosparam file="$(find car_connect)/param_navi/move_base_params.yaml"                       command="load" />
-      <rosparam file="$(find car_connect)/param_navi/dwa_local_planner_params_$(arg model).yaml"  command="load" />
+
+
+
+      <rosparam file="$(find car_connect)/param_navi/base_local_planner_params.yaml"  command="load" />
+      <rosparam file="$(find car_connect)/param_navi/base_global_planner_params.yaml"  command="load" />
 
       <!-- Set tf_prefix for frames explicity, overwriting defaults -->
       <param name="global_costmap/scan/sensor_frame"                value="/laser"/>
@@ -24,13 +40,12 @@
       <param name="global_costmap/robot_base_frame"                 value="/base_link"/>
       <param name="local_costmap/scan/sensor_frame"                 value="/laser"/>
       <param name="local_costmap/obstacle_layer/scan/sensor_frame"	value="/laser"/>
-      <param name="local_costmap/global_frame"                      value="/odom"/>
+      <param name="local_costmap/global_frame"                      value="/map"/>
       <param name="local_costmap/robot_base_frame"  	              value="/base_link"/>
 
       <!-- Centralized map server -->
       <remap from="map"                                             to="/map"/>
       <remap from="odom"                                            to="/car_connect/odom"/>
-      <param name="DWAPlannerROS/min_vel_x"                         value="0.0" if="$(arg move_forward_only)" />
     </node>
   
 </launch>

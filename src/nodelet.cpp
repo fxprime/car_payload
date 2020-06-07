@@ -45,9 +45,9 @@ int main(int argc, char *argv[]) {
 
     openSerial("/dev/ttyUSB0");
 
-    _imu_pub          = n.advertise<sensor_msgs::Imu>("car_connect/imu",               1);
-    _odom_pub         = n.advertise<nav_msgs::Odometry>("car_connect/odom",            1);
-    _vel_cmd_pub      = n.advertise<geometry_msgs::Twist>("car_connect/vel_cmd",       1);
+    _imu_pub          = n.advertise<sensor_msgs     ::Imu>      ("car_connect/imu",     1);
+    _odom_pub         = n.advertise<nav_msgs        ::Odometry> ("car_connect/odom",    1);
+    _vel_cmd_pub      = n.advertise<geometry_msgs   ::Twist>    ("car_connect/vel_cmd", 1);
     ros::Subscriber sub_cmd_vel = n.subscribe("/cmd_vel", 1, &cmdCb);
 
     while(ros::ok()) {
