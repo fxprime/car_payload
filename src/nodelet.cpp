@@ -20,17 +20,15 @@ const float target_quid = 33;
 void openSerial(const string& sport);
 void cmdCb(const geometry_msgs::Twist::ConstPtr &msg) 
 {
-    // ros::Time t_now                 = ros::Time::now();
-    // static ros::Time last_send_cmd  = t_now;
-    // if( t_now - last_send_cmd > ros::Duration(0.2) ) {
-    //     last_send_cmd = t_now;
-        cnt_status_s pmsg;
-        pmsg.vel_cnt.vx = msg->linear.x*100;
-        pmsg.vel_cnt.vy = msg->linear.y*100;
-        pmsg.vel_cnt.wz = msg->angular.z*100;
-        send_vel_cmd_status(target_quid, pmsg);
-        ROS_INFO("Received cmd_vel %.2f %.2f %.2f", msg->linear.x, msg->linear.y, msg->angular.z);
-    // }
+    
+    if( std::isnan(msg->linear.x) ||  std::isnan(msg->linear.y) || std::isnan(msg->linear.z))       return;
+    if( std::isnan(msg->angular.x) ||  std::isnan(msg->angular.y) || std::isnan(msg->angular.z))    return;
+    cnt_status_s pmsg;
+    pmsg.vel_cnt.vx = msg->linear.x*100;
+    pmsg.vel_cnt.vy = msg->linear.y*100;
+    pmsg.vel_cnt.wz = msg->angular.z*100;
+    send_vel_cmd_status(target_quid, pmsg);
+    ROS_INFO("Received cmd_vel %.2f %.2f %.2f", msg->linear.x, msg->linear.y, msg->angular.z);
 }
 
 
@@ -43,7 +41,7 @@ int main(int argc, char *argv[]) {
     ros::NodeHandle n;
     ros::NodeHandle pnh("~");
 
-    openSerial("/dev/ttyUSB0");
+    openSerial("/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0");
 
     _imu_pub          = n.advertise<sensor_msgs     ::Imu>      ("car_connect/imu",     1);
     _odom_pub         = n.advertise<nav_msgs        ::Odometry> ("car_connect/odom",    1);
