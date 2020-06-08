@@ -25,7 +25,7 @@ void cmdCb(const geometry_msgs::Twist::ConstPtr &msg)
     if( std::isnan(msg->angular.x) ||  std::isnan(msg->angular.y) || std::isnan(msg->angular.z))    return;
     cnt_status_s pmsg;
     pmsg.vel_cnt.vx = msg->linear.x*100;
-    pmsg.vel_cnt.vy = msg->linear.y*100;
+    pmsg.vel_cnt.vy = -msg->linear.y*100;
     pmsg.vel_cnt.wz = msg->angular.z*100;
     send_vel_cmd_status(target_quid, pmsg);
     ROS_INFO("Received cmd_vel %.2f %.2f %.2f", msg->linear.x, msg->linear.y, msg->angular.z);
