@@ -57,7 +57,7 @@
   </link>
 
 
-  <link name="rs200">
+  <link name="rs200_frame">
     <visual>
       <origin xyz="0 0 0" />
       <geometry>
