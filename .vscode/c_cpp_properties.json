@@ -1,0 +1,38 @@
+{
+    "configurations": [
+        {
+            "browse": {
+                "databaseFilename": "",
+                "limitSymbolsToIncludedHeaders": true
+            },
+            "includePath": [
+                "/home/fx/car_ws/install/include/**",
+                "/opt/ros/kinetic/include/**",
+                "/home/fx/car_ws/src/ceres-solver/include/**",
+                "/usr/include/**",
+                "/home/fx/car_ws/src/car_tracking/include/car_tracking/**"
+            ],
+            "name": "ROS",
+            "intelliSenseMode": "gcc-x64",
+            "compilerPath": "/opt/gcc-arm-none-eabi-4_9-2015q3/bin/arm-none-eabi-gcc",
+            "cStandard": "c11",
+            "cppStandard": "c++14"
+        },
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/opt/ros/kinetic/include/**",
+                "/usr/include/**",
+                "/home/fx/Qt5.12.0/5.12.0/gcc_64/include/**"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/clang++-3.7",
+            "cStandard": "c11",
+            "cppStandard": "c++14",
+            "intelliSenseMode": "clang-x64",
+            "configurationProvider": "ms-vscode.cmake-tools "
+        }
+    ],
+    "version": 4
+}

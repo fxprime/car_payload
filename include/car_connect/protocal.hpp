@@ -126,14 +126,14 @@ sendMessage(const uint8_t msg, const uint16_t id, const uint8_t *payload, const 
 { 
 
 
-    ulink_header_t   header = {0};
+    ulink_header_t   header   = {0};
     ulink_checksum_t checksum = {0};
 
     // Populate header
-    header.header = HEADER;
-    header.msg  = msg;
+    header.header      = HEADER;
+    header.msg         = msg;
     header.id.quad_uid = id;
-    header.length = length;
+    header.length      = length;
  
     // Calculate checksum
     calcChecksum(((uint8_t *)&header) , sizeof(header), &checksum);
@@ -197,11 +197,11 @@ inline void packet_decode(uint16_t quad_uid )
 
         {
             sensor_msgs::Imu msg;
-            msg.header.frame_id = "imu";
-            msg.header.stamp = ros::Time::now();
-            msg.angular_velocity.x = _state.sensor.imu.imu_gyro[0]/100.0;
-            msg.angular_velocity.y = _state.sensor.imu.imu_gyro[1]/100.0;
-            msg.angular_velocity.z = _state.sensor.imu.imu_gyro[2]/100.0;
+            msg.header.frame_id       = "imu";
+            msg.header.stamp          = ros::Time::now();
+            msg.angular_velocity.x    = _state.sensor.imu.imu_gyro[0]/100.0;
+            msg.angular_velocity.y    = _state.sensor.imu.imu_gyro[1]/100.0;
+            msg.angular_velocity.z    = _state.sensor.imu.imu_gyro[2]/100.0;
             msg.linear_acceleration.x = -_state.sensor.imu.imu_accel[0]/100.0;
             msg.linear_acceleration.y = -_state.sensor.imu.imu_accel[1]/100.0;
             msg.linear_acceleration.z = -_state.sensor.imu.imu_accel[2]/100.0;
@@ -213,18 +213,18 @@ inline void packet_decode(uint16_t quad_uid )
         {
 
             nav_msgs::Odometry msg;
-            msg.header.stamp = ros::Time::now();
-            msg.header.frame_id = "odom";
-            msg.child_frame_id = "base_link";
-            msg.twist.twist.linear.x = _state.sensor.est_speed.vx/100.0;
-            msg.twist.twist.linear.y = _state.sensor.est_speed.vy/100.0;
-            msg.twist.twist.linear.z = 0;
+            msg.header.stamp          = ros::Time::now();
+            msg.header.frame_id       = "odom";
+            msg.child_frame_id        = "base_link";
+            msg.twist.twist.linear.x  = _state.sensor.est_speed.vx/100.0;
+            msg.twist.twist.linear.y  = _state.sensor.est_speed.vy/100.0;
+            msg.twist.twist.linear.z  = 0;
             msg.twist.twist.angular.x = 0;
             msg.twist.twist.angular.y = 0;
             msg.twist.twist.angular.z = _state.sensor.est_speed.wz/100.0;
-            msg.pose.pose.position.x = _state.sensor.est_pos.x/1000.0;
-            msg.pose.pose.position.y = _state.sensor.est_pos.y/1000.0;
-            msg.pose.pose.position.z = 0;
+            msg.pose.pose.position.x  = _state.sensor.est_pos.x/1000.0;
+            msg.pose.pose.position.y  = _state.sensor.est_pos.y/1000.0;
+            msg.pose.pose.position.z  = 0;
 
             /* -------------------------------------------------------------------------- */
             /*             convert yaw to quaternion eigen and forward to msg             */
@@ -278,8 +278,8 @@ inline void packet_decode(uint16_t quad_uid )
         {
             geometry_msgs::Twist msg;
             memset(&msg, 0, sizeof(msg));
-            msg.linear.x = _state.cnt.vel_cnt.vx/100.0;
-            msg.linear.y = _state.cnt.vel_cnt.vy/100.0;
+            msg.linear.x  = _state.cnt.vel_cnt.vx/100.0;
+            msg.linear.y  = _state.cnt.vel_cnt.vy/100.0;
             msg.angular.z = _state.cnt.vel_cnt.wz/100.0;
             _vel_cmd_pub.publish(msg);
         }

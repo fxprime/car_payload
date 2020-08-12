@@ -7,13 +7,12 @@
   <arg name="robot_namespace" default="car_2d"/>
   <arg name="move_forward_only" default="false"/>
 
-    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen"   >
       <!-- Default configs form the TB3 repos -->
       
       
       <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" />
       <!-- <param name="base_local_planner" value="base_local_planner/TrajectoryPlannerROS" /> -->
-      <!-- <param name="base_global_planner" value="navfn/NavfnROS" /> -->
       <!-- <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" /> -->
 
 
@@ -23,7 +22,6 @@
 
       <rosparam file="$(find car_connect)/param_navi/local_costmap_params.yaml"                   command="load" />
       <rosparam file="$(find car_connect)/param_navi/global_costmap_params.yaml"                  command="load" />
-
 
 
       <rosparam file="$(find car_connect)/param_navi/move_base_params.yaml"                       command="load" />
@@ -46,6 +44,9 @@
       <!-- Centralized map server -->
       <remap from="map"                                             to="/map"/>
       <remap from="odom"                                            to="/car_connect/odom"/>
+      
+
+      <remap from="cmd_vel"                                         to="/cmd_vel_map_unused"/>
     </node>
   
 </launch>

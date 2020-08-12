@@ -1,5 +1,6 @@
 global_costmap:
-  update_frequency: 2.0 # Map update loop
+  update_frequency: 5.0 # Map update loop
+  always_send_full_costmap: True  #This will make global plan publish to other program properly
   plugins:
       - name: static_map
         type: "costmap_2d::StaticLayer"
@@ -9,10 +10,15 @@ global_costmap:
 
       -
         name: inflation_layer
-        type: "costmap_2d::InflationLayer"
+        type: "costmap_2d::InflationLayer" 
 
 
 
   static_map:
+      map_topic: /map_edited
       lethal_cost_threshold: 50
       static_map: true
+
+  inflation_layer:
+      inflation_radius: 0.3
+      cost_scaling_factor: 5.0 

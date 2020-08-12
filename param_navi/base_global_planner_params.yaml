@@ -8,22 +8,7 @@ base_global_planner: global_planner/GlobalPlanner
 #   planner_window_y: 0.0
 #   default_tolerance: 0.0
 #   visualize_potential: true # false
-
-# GlobalPlanner:
-#   allow_unknown: false
-#   default_tolerance: 0.2
-#   visualize_potential: false
-#   use_dijkstra: true
-#   use_quadratic: true
-#   use_grid_path: false
-#   old_navfn_behavior: false
-
-#   lethal_cost: 253
-#   neutral_cost: 50
-#   cost_factor: 3.0
-#   publish_potential: true
-#   orientation_mode: 0
-#   orientation_window_size: 1
+ 
 
 GlobalPlanner:
 
@@ -65,7 +50,7 @@ GlobalPlanner:
 
     # ~<name>/cost_factor (double, default: 3.)
     # Factor to multiply each cost from costmap by (dynamic reconfigure)
-    cost_factor: 3.0
+    cost_factor: 0.55
 
     # ~<name>/publish_potential (bool, default: True)
     # Publish Potential Costmap (dynamic reconfigure)
@@ -73,7 +58,7 @@ GlobalPlanner:
 
     # ~<name>/orientation_mode (int, default: 0)
     # How to set the orientation of each point (None=0, Forward=1, Interpolate=2, ForwardThenInterpolate=3, Backward=4, Leftward=5, Rightward=6) (dynamic reconfigure)
-    orientation_mode: 3
+    orientation_mode: 0
 
     # ~<name>/orientation_window_size (int, default: 1)
     # What window to use to determine the orientation based on the position derivative specified by the orientation mode (dynamic reconfigure)
