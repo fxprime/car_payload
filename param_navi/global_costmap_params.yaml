@@ -7,7 +7,6 @@ global_costmap:
       -
         name: obstacle_layer
         type: "costmap_2d::VoxelLayer"
-
       -
         name: inflation_layer
         type: "costmap_2d::InflationLayer" 
@@ -22,3 +21,4 @@ global_costmap:
   inflation_layer:
       inflation_radius: 0.3
       cost_scaling_factor: 5.0 
+
