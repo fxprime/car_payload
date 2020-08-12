@@ -76,7 +76,7 @@
   <joint name="rs200_link_joint" type="fixed">
     <parent link="base_link" />
     <child link="rs200_frame" />
-    <origin xyz="0.04 0 0.16"  rpy="0 0 0"/>
+    <origin xyz="0.04 0 0.16"  rpy="3.14159 0 0"/>
   </joint>
 
   <joint name="horizontal_laser_link_joint" type="fixed">
