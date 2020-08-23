@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(car_connect)
+project(car_payload)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 add_compile_options(-std=c++11)
@@ -10,6 +10,7 @@ add_compile_options(-std=c++11)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   sensor_msgs
+  std_msgs
   nav_msgs
   geometry_msgs
   eigen_conversions
@@ -138,8 +139,8 @@ include_directories(
 )
 
 
-add_executable ( car_connect src/nodelet.cpp src/serial.cpp  )
-target_link_libraries (car_connect  ${catkin_LIBRARIES} )
+add_executable ( car_payload src/nodelet.cpp src/serial.cpp  )
+target_link_libraries (car_payload  ${catkin_LIBRARIES} )
 
 
 ## Add cmake target dependencies of the library

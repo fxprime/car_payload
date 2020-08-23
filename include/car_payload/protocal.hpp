@@ -7,7 +7,7 @@
 #include <tf/transform_broadcaster.h>
 #include <tf/transform_listener.h>
 #include <tf_conversions/tf_eigen.h>
-#include <car_connect/msg.hpp>
+#include <car_payload/msg.hpp>
 
 #define toUint32(X)    *(uint32_t*)(&X)
 #define toUint8(X)    *(uint8_t*)(&X)
@@ -186,111 +186,19 @@ sendMessage(const uint8_t msg, const uint16_t id, const uint8_t *payload, const 
 
 inline void packet_decode(uint16_t quad_uid )
 {
-
  
-    if (_msgid == ACK) {  
-    }
-
-    else if (_msgid == SENSOR_STATUS) { 
-        // ROS_INFO("Received SENSOR_STATUS");
-        memcpy(&_state.sensor, &_pay[0], sizeof(_state.sensor));
-
-        {
-            sensor_msgs::Imu msg;
-            msg.header.frame_id       = "imu";
-            msg.header.stamp          = ros::Time::now();
-            msg.angular_velocity.x    = _state.sensor.imu.imu_gyro[0]/100.0;
-            msg.angular_velocity.y    = _state.sensor.imu.imu_gyro[1]/100.0;
-            msg.angular_velocity.z    = _state.sensor.imu.imu_gyro[2]/100.0;
-            msg.linear_acceleration.x = -_state.sensor.imu.imu_accel[0]/100.0;
-            msg.linear_acceleration.y = -_state.sensor.imu.imu_accel[1]/100.0;
-            msg.linear_acceleration.z = -_state.sensor.imu.imu_accel[2]/100.0;
-            _imu_pub.publish(msg);
-        }
-
-
-
-        {
-
-            nav_msgs::Odometry msg;
-            msg.header.stamp          = ros::Time::now();
-            msg.header.frame_id       = "odom";
-            msg.child_frame_id        = "base_link";
-            msg.twist.twist.linear.x  = _state.sensor.est_speed.vx/100.0;
-            msg.twist.twist.linear.y  = _state.sensor.est_speed.vy/100.0;
-            msg.twist.twist.linear.z  = 0;
-            msg.twist.twist.angular.x = 0;
-            msg.twist.twist.angular.y = 0;
-            msg.twist.twist.angular.z = _state.sensor.est_speed.wz/100.0;
-            msg.pose.pose.position.x  = _state.sensor.est_pos.x/1000.0;
-            msg.pose.pose.position.y  = _state.sensor.est_pos.y/1000.0;
-            msg.pose.pose.position.z  = 0;
-
-            /* -------------------------------------------------------------------------- */
-            /*             convert yaw to quaternion eigen and forward to msg             */
-            /* -------------------------------------------------------------------------- */
-            float yaw = wrap_pi(_state.sensor.est_pos.thz/100.0/*+M_PI*/);
-            Eigen::Quaterniond yawq(cos(yaw / 2), 0, 0, sin(yaw / 2));
-            tf::quaternionEigenToMsg(yawq,msg.pose.pose.orientation );
-            
-            _odom_pub.publish(msg);
-
-
-
-            /* -------------------------------------------------------------------------- */
-            /*                          Send odom at 20hz for now                         */
-            /* -------------------------------------------------------------------------- */
-            // static ros::Time last_send_tf = ros::Time::now();
-            // if(ros::Time::now()-last_send_tf > ros::Duration(0.05)) {
-            //     last_send_tf = ros::Time::now();
-                static tf::TransformBroadcaster odom_br;
-                tf::Transform transform;
-                tf::Quaternion q;
-                q.setRPY(0,0,yaw);
-                transform.setOrigin(tf::Vector3(msg.pose.pose.position.x,msg.pose.pose.position.y,msg.pose.pose.position.z));
-                transform.setRotation(q);
-
-                odom_br.sendTransform(
-                    tf::StampedTransform(
-                        transform, ros::Time::now(), "odom_wheel", "car"));
-            // }
-            
-      
-
-        }
-        
-
-        // ROS_INFO("%.2f,%.2f,%.2f", _state.sensor.imu.imu_gyro[0]/100.0, _state.sensor.imu.imu_gyro[1]/100.0, _state.sensor.imu.imu_gyro[2]/100.0);
-
-    }
-
-    else if (_msgid == SYSTEM_STATUS) {
-        ROS_INFO("Received SYSTEM_STATUS");
-    }
-
-    else if (_msgid == RC_STATUS) {
-        // ROS_INFO("Received RC_STATUS");
-        memcpy(&_state.rc, &_pay[0], sizeof(_state.rc));
-
-    }
-    else if (_msgid == VEL_CNT) {
-        memcpy(&_state.cnt, &_pay[0], sizeof(_state.cnt));
-        {
-            geometry_msgs::Twist msg;
-            memset(&msg, 0, sizeof(msg));
-            msg.linear.x  = _state.cnt.vel_cnt.vx/100.0;
-            msg.linear.y  = _state.cnt.vel_cnt.vy/100.0;
-            msg.angular.z = _state.cnt.vel_cnt.wz/100.0;
-            _vel_cmd_pub.publish(msg);
-        }
-    }
-    else if (_msgid == TEXT_OUT) {
-        text_out_s msgOut;
-        memcpy(&msgOut, &_pay[0], sizeof(text_out_s));
-        ROS_INFO("CAR -> %s", msgOut.text);
-    }
+    if (_msgid == PAYLOAD_STATUS) {
+        payload_status_s msgIn;
+        memcpy(&msgIn, &_pay[0], sizeof(msgIn));
+        // {
+        //     ROS_INFO("Servo %.2f %.2f %.2f %.2f %.2f", msgIn.servo1, msgIn.servo2, msgIn.servo3, msgIn.servo4, msgIn.servo5);
+        // }
+    } 
 }
 
-static inline void send_vel_cmd_status(uint16_t quad_id, cnt_status_s &msg) {
-    sendMessage(CMD_NAV_VEL, quad_id, (uint8_t *)&msg, sizeof(msg)); 
+static inline void send_servo_cmd(uint16_t quad_id, servos_cmd_s &msg) {
+    sendMessage(SERVOS_CMD, quad_id, (uint8_t *)&msg, sizeof(msg)); 
+}
+static inline void send_allservo_cmd(uint16_t quad_id, payload_status_s &msg) {
+    sendMessage(SERVO_ALL_CMD, quad_id, (uint8_t *)&msg, sizeof(msg)); 
 }

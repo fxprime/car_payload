@@ -3,32 +3,15 @@
 #include <ros/ros.h>
 
 
-#include "car_connect/serial.hpp"
-#include "car_connect/msg.hpp"
+#include "car_payload/serial.hpp"
+#include "car_payload/msg.hpp"
 
 
 
 
 serial* _serial;
-ros::Publisher _imu_pub;
-ros::Publisher _odom_pub;
-ros::Publisher _vel_cmd_pub;
-
-
-
-
-
-typedef struct {
-    sensor_status_s sensor;
-    system_status_s system;
-    rc_status_s     rc;
-    cnt_status_s    cnt;
-}car_state;
-
-
-car_state _state;
-
-
+ros::Publisher _payload_pub; 
+ 
 
 
 

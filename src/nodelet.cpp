@@ -1,14 +1,13 @@
-#include <sensor_msgs/Imu.h>
-#include <nav_msgs/Odometry.h>
-#include <geometry_msgs/Twist.h>
+#include <std_msgs/UInt8MultiArray.h>
+
 
 
 #include <Eigen/Dense>
 #include <ros/ros.h>
 #include <ros/time.h>
 #include <ros/package.h>
-#include "car_connect/nodelet.hpp"
-#include "car_connect/protocal.hpp"
+#include "car_payload/nodelet.hpp"
+#include "car_payload/protocal.hpp"
 
 
 
@@ -18,17 +17,32 @@ const float target_quid = 33;
 
 
 void openSerial(const string& sport);
-void cmdCb(const geometry_msgs::Twist::ConstPtr &msg) 
+void cmdCb(const std_msgs::UInt8MultiArray::ConstPtr &msg) 
 {
+  
+    if(msg->data.size() <3) {
+        ROS_ERROR("data size mismatch");
+        return;
+    }
+
+    if(msg->data.size()==3) {
+        servos_cmd_s msgOut;
+        msgOut.servo_id = msg->data[0];
+        msgOut.servo_val = ( toSint(msg->data[1])*100); 
+        send_servo_cmd(target_quid, msgOut);
+        ROS_INFO("Send servo %d %d", msgOut.servo_id, msgOut.servo_val);
+    }else if(msg->data.size()==5) {
+        payload_status_s msgOut;
+        msgOut.servo1 = msg->data[0];
+        msgOut.servo2 = msg->data[1];
+        msgOut.servo3 = msg->data[2];
+        msgOut.servo4 = msg->data[3];
+        msgOut.servo5 = msg->data[4];
+        send_allservo_cmd(target_quid, msgOut);
+        ROS_INFO("Send all servo = %d %d %d %d %d", msg->data[0], msg->data[1], msg->data[2], msg->data[3], msg->data[4]);
+    }
+
     
-    if( std::isnan(msg->linear.x) ||  std::isnan(msg->linear.y) || std::isnan(msg->linear.z))       return;
-    if( std::isnan(msg->angular.x) ||  std::isnan(msg->angular.y) || std::isnan(msg->angular.z))    return;
-    cnt_status_s pmsg;
-    pmsg.vel_cnt.vx = msg->linear.x*100;
-    pmsg.vel_cnt.vy = -msg->linear.y*100;
-    pmsg.vel_cnt.wz = msg->angular.z*100;
-    send_vel_cmd_status(target_quid, pmsg);
-    ROS_INFO("Received cmd_vel %.2f %.2f %.2f", msg->linear.x, msg->linear.y, msg->angular.z);
 }
 
 
@@ -37,16 +51,13 @@ int main(int argc, char *argv[]) {
 
 
     //init stuff
-    ros::init(argc, argv, "car_connect");
+    ros::init(argc, argv, "car_payload");
     ros::NodeHandle n;
     ros::NodeHandle pnh("~");
 
-    openSerial("/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0");
-
-    _imu_pub          = n.advertise<sensor_msgs     ::Imu>      ("car_connect/imu",     1);
-    _odom_pub         = n.advertise<nav_msgs        ::Odometry> ("car_connect/odom",    1);
-    _vel_cmd_pub      = n.advertise<geometry_msgs   ::Twist>    ("car_connect/vel_cmd", 1);
-    ros::Subscriber sub_cmd_vel = n.subscribe("/cmd_vel", 1, &cmdCb);
+    openSerial("/dev/serial/by-id/usb-FTDI_FT231X_USB_UART_DM01VISA-if00-port0");
+ 
+    ros::Subscriber sub_payload_cmd = n.subscribe("car_payload/payload_set", 1, &cmdCb);
 
     while(ros::ok()) {
 
