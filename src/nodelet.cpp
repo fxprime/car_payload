@@ -55,7 +55,7 @@ int main(int argc, char *argv[]) {
     ros::NodeHandle n;
     ros::NodeHandle pnh("~");
 
-    openSerial("/dev/serial/by-id/usb-FTDI_FT231X_USB_UART_DM01VISA-if00-port0");
+    openSerial("/dev/serial/by-id/usb-Prolific_Technology_Inc._USB-Serial_Controller-if00-port0");
  
     ros::Subscriber sub_payload_cmd = n.subscribe("car_payload/payload_set", 1, &cmdCb);
 

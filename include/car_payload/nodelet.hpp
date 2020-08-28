@@ -27,7 +27,7 @@ void openSerial(const string& sport) {
     string gg = sport;
     _serial = new serial(gg );
     if(_serial->isOpened()) {
-        _serial->setup_port(115200, 8, 1, false, false);
+        _serial->setup_port(57600, 8, 1, false, false);
         ROS_INFO("Connecting to serial port %s", sport.c_str());
     }else{
         ROS_ERROR("Cannot connect to %s", sport.c_str());
